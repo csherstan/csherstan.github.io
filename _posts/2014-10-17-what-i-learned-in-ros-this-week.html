@@ -1,0 +1,61 @@
+---
+title: What I learned in ROS this week
+date: '2014-10-17T13:39:25+09:00'
+tags:
+- ros
+- robotics
+---
+<p><strong>Messages:</strong></p>
+<p>In a discussion with members of OSRF (<a href="https://github.com/ros/std_msgs/issues/7#issuecomment-59396705" target="_blank">https://github.com/ros/std_msgs/issues/7#issuecomment-59396705</a>) I learned that std_msgs shouldn&rsquo;t really be used as stand alone message types directly on topics as they contain no semantic information describing what they are. Rather you <strong>should</strong> use custom message types.</p>
+<div></div>
+<div>Ex. If I have a message of type Float32 I know nothing about how it should be processed. On the other hand if I have a message of type PredictionError I know what it&rsquo;s for and what to do with it.</div>
+<div></div>
+<div></div>
+<div><strong>ROS and the web:</strong></div>
+<div></div>
+<div>rosbridge provides a small web server that converts communication to and from the ros master into JSON (Javascript Object Notation), which can then be readily used in a web page. This is a potential alternative for creating GUI&rsquo;s via rqt.</div>
+<div></div>
+<div></div>
+<div><strong>Subscribers sequentially block!:</strong></div>
+<div></div>
+<div>I haven&rsquo;t quite confirmed this, but based on a comment from one of the OSRF guys at ROSCon and some of my own experience it appears that subscribers to a particular topic are processed one at a time in a blocking way. Meaning that if there are 3 subscribers to a topic then ros master will pass the data to the first subscriber, wait for it to finish, then call the second, wait for it to finish, then call the third, etc.</div>
+<div></div>
+<div>This can be seen fairly easily by timing various functions where publishing occurs and seeing how their timing changes when you add more subscribers.</div>
+<div></div>
+<div>There are 2 ways I can think of around this at the moment:</div>
+<div>
+<ul>
+<li>UDPROS (<a href="http://wiki.ros.org/ROS/UDPROS">http://wiki.ros.org/ROS/UDPROS</a>) - This should use a broadcast type system, so there should be no blocking or sequential calls</li>
+<li>in the callback functions of your subscribers, just grab the data and store it, don&rsquo;t process it at this time. Rather, either kick off another thread to handle the processing, or have a single thread which triggers regularly and grabs the latest data from wherever you&rsquo;ve stashed it.</li>
+</ul>
+</div>
+<div></div>
+<div><strong>Contributing to ROS:</strong></div>
+<div></div>
+<div>I&rsquo;m in the process of getting my first pull-request merged into ros_comm. Here&rsquo;s what I&rsquo;ve learned from the experience:</div>
+<div>
+<ul>
+<li>First submit an issue, talk to the owners of the repo, and see if they will approve the request before you go write a whole bunch of code that may or may not ever be accepted.</li>
+<li>Use the same docstring format to comment your code as the file you are editing. At least ros_comm seems to use the following format: <a href="http://epydoc.sourceforge.net/manual-epytext.html" title="http://epydoc.sourceforge.net/manual-epytext.html">http://epydoc.sourceforge.net/manual-epytext.html</a></li>
+<li>Write your code as if for Python3. So that means use .values() over .itervalues() as an example.</li>
+<li>Follow PEP8 style guides for spacing, etc. <a href="http://legacy.python.org/dev/peps/pep-0008/" title="http://legacy.python.org/dev/peps/pep-0008/">http://legacy.python.org/dev/peps/pep-0008/</a></li>
+<li>Even if you are just refactoring code, expect it to be treated as new code and scrutinized as such, even if you didn&rsquo;t write it.</li>
+</ul>
+</div>
+<div></div>
+<div><strong>One Python Gotcha:</strong></div>
+<div></div>
+<div>Do not initialize an array or dict using default arguments like so:</div>
+<blockquote>
+<div>def foo(my_dict={}, my_list=())</div>
+</blockquote>
+<div></div>
+<div>Instead do:</div>
+<div></div>
+<blockquote>
+<div>def foo(my_dict=None, my_list=None):</div>
+<div>      my_dict = my_dict or {}</div>
+<div>      my_list = my_list or {}</div>
+</blockquote>
+<div></div>
+<div>For an explanation check out: <a href="http://stackoverflow.com/questions/1132941/least-astonishment-in-python-the-mutable-default-argument" title="http://stackoverflow.com/questions/1132941/least-astonishment-in-python-the-mutable-default-argument">http://stackoverflow.com/questions/1132941/least-astonishment-in-python-the-mutable-default-argument</a></div>

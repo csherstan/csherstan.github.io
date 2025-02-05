@@ -1,0 +1,10 @@
+---
+title: 'ALA 2020: Temporally Extended Auxiliary Tasks'
+date: '2020-04-07T17:16:54+09:00'
+tags:
+- reinforcement learning
+- general value functions
+- auxiliary tasks
+- borealisai
+---
+<p>My paper “Work in Progress: Temporally Extended Auxiliary Tasks” has been accepted to the<a href="https://ala2020.vub.ac.be/"> Adaptive and Learning Agents</a> workshop at AAMAS 2020.<br/><br/>This work was done in collaboration with Bilal Kartal, Pablo Hernandez-Leal and Matt Taylor while I was intern at Borealis AI last summer. It was a pleasure to work with all of them.<br/><br/>The paper focuses on the question, what effect does prediction timescale of a GVF auxiliary task have on policy learning? If that doesn’t make sense then hopefully this will help. Auxiliary tasks are additional losses placed on a neural network whose sole purpose is to provide gradients for training a core network (at least that’s how I define them). GVFs (general value functions) are a type predictor.<br/><br/>In short, we haven’t yet a clear relationship between the timescale and policy learning. However, we do note that adding the GVF auxiliary tasks allows us to shorten the trajectory length used in the A2C algorithm.</p>

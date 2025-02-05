@@ -1,0 +1,23 @@
+---
+title: Synchronization of recorded ROS Topics
+date: '2014-11-14T17:22:33+09:00'
+tags:
+- ROS
+- rosbag
+---
+<p>One of the assumptions I made when I started using ROS was that rosbags would magically handle data synchronization for me.</p>
+<p>This was a very wrong assumption.</p>
+<p>When a topic is published there is no information automatically recorded about when it was published (I think there&rsquo;s an opportunity for improvement here). Additionally, different messages take longer to marshal depending on the size of the message and the complexity of the data. This means that if we have two message types, Message1 and Message2, where Message1 is published before Message2, a subscriber to Message2 may actually be called before a subscriber to Message1.</p>
+<p>How might this affect us? Well, in runtime it means that if we use one signal to modify how we interpret another signal we may get a synchronization problem. In this case you may want to use a service call for the first message before publishing the second, assuming the two operations are in the same node.</p>
+<p>Now say you&rsquo;re recording all your experimental data to a rosbag - the order of messages in your bag will most definitely NOT be correct.</p>
+<p>We can get around this by adding</p>
+<blockquote>
+<p><code>Header header</code></p>
+</blockquote>
+<p>as the <strong>FIRST</strong> element (must be first) in any custom messages. Now every time we publish a message we MUST specify the stamp value of the header like so:</p>
+<blockquote>
+<p>some_publisher.publish(header=Header(stamp=rospy.Time().now()))</p>
+</blockquote>
+<p>Or set the stamp to some other specific value, perhaps to ensure that all messages that correspond to one time step or your program have the same timestamp.</p>
+<p>Then after we record we can post-process our bag to use the header timestamps in the rosbag instead of the ones it used for recording, as demonstrated <a href="http://wiki.ros.org/rosbag/Cookbook#Rewrite_bag_with_header_timestamps">here</a>.</p>
+<p>One more caveat is that if you need to make sure one message comes before another (say if you want to have a marker before some data begins) you should offset the time slightly between the two messages.</p>
