@@ -72,6 +72,12 @@ cutting-edge AI technologies."
     - label: "LinkedIn"
       icon: "fab fa-fw fa-linkedin-in"
       url: "https://www.linkedin.com/in/craig-sherstan-4077072/"
+    - label: "BlueSky"
+      icon: "fab fa-fw fa-bluesky"
+      url: "https://bsky.app/profile/craigsherstan.bsky.social"
+    - label: "Google Scholar"
+      icon: "fab fa-fw fa-google-scholar"
+      url: "https://scholar.google.com/citations?user=z_UYQB8AAAAJ&hl=en"
 
 footer:
   links:
@@ -81,6 +87,12 @@ footer:
     - label: "LinkedIn"
       icon: "fab fa-fw fa-linkedin-in"
       url: "https://www.linkedin.com/in/craig-sherstan-4077072/"
+    - label: "BlueSky"
+      icon: "fab fa-fw fa-bluesky"
+      url: "https://bsky.app/profile/craigsherstan.bsky.social"
+    - label: "Google Scholar"
+      icon: "fab fa-fw fa-google-scholar"
+      url: "https://scholar.google.com/citations?user=z_UYQB8AAAAJ&hl=en"
 
 defaults:
   # _posts
